@@ -1,0 +1,16 @@
+{
+  "name": "create_play_list",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "musicmetadata": "^2.0.5",
+    "node": "0.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Egor Chebotarev",
+  "license": "MIT"
+}
