@@ -95,7 +95,7 @@ function createList(folder) {
 			    var data = await getAudioData(audio);
 			    audio.image = await writeImgAudio(data.audio, data.metadata);
 
-				console.log('Read and write audio data ' + audio.title + ' end\r\n');
+				// console.log('Read and write audio data ' + audio.title + ' end\r\n');
 			}));
 		})
 		.then(function() {
@@ -117,9 +117,9 @@ function getAudioData(audio) {
 	return new Promise(function(resolve, reject) {
 		var path = audio.path;
 
-		console.log('Start reading audio metadata: ' + audio.title);
-		console.log('Total audio: ' + LIST.audio.length);
-		console.log('Image audio in progress: ' + countAudio++);
+		// console.log('Start reading audio metadata: ' + audio.title);
+		// console.log('Total audio: ' + LIST.audio.length);
+		// console.log('Image audio in progress: ' + countAudio++);
 
 		mm(fs.createReadStream(localPath + path), {duration: true}, function(err, metadata) {
 			if (err) {
@@ -127,7 +127,7 @@ function getAudioData(audio) {
 				return;
 			}
 
-			console.log('End reading audio metadata: ' + audio.title);
+			// console.log('End reading audio metadata: ' + audio.title);
 
 			audio.title = metadata.title;
 			audio.genre = getGenre(metadata.genre[0]);
@@ -136,7 +136,7 @@ function getAudioData(audio) {
 
 			audio.artist = '';
 			for (var i = 0; i < metadata.artist.length; i++) {
-				if (audio.artist == '') {
+				if (audio.artist === '') {
 					audio.artist = metadata.artist[i];
 				}
 				else {
@@ -179,9 +179,9 @@ function getAudioData(audio) {
 }
 function writeImgAudio(audio, data) {
 	return new Promise(function(resolve, reject) {
-		console.log('Start writing audio image: ' + audio.title);
+		// console.log('Start writing audio image: ' + audio.title);
 
-		if (data.picture.length == 0) {
+		if (data.picture.length === 0) {
 			resolve('i/mod_default.png');
 			console.log(audio.title + ' NO IMAGE');
 
@@ -190,7 +190,7 @@ function writeImgAudio(audio, data) {
 
 		createDirectory(PATH + '/image');
 
-		var imageName = audio.title.replace(/[ |,|'|"|?|!|.|(|)]/g, '_');
+		var imageName = audio.title.replace(/[ |,|'|"|/|?|!|.|(|)]/g, '_');
 		var path = localPath + PATH + '/image/' + imageName + '.' + data.picture[0].format;
 		fs.writeFile(path, data.picture[0].data, function (err) {
 			if (err) {
@@ -198,7 +198,7 @@ function writeImgAudio(audio, data) {
 				return;
 			}
 
-			console.log('End writing audio image: ' + audio.title);
+			// console.log('End writing audio image: ' + audio.title);
 
 			resolve(PATH + '/image/' + imageName + '.' + data.picture[0].format);
 		});
