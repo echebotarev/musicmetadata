@@ -123,7 +123,8 @@ function getAudioData(audio) {
 
 		mm(fs.createReadStream(localPath + path), {duration: true}, function(err, metadata) {
 			if (err) {
-				reject(err);
+				console.log(err);
+				resolve({audio: {}, metadata:{picture: ''}});
 				return;
 			}
 
