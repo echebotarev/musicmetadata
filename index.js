@@ -1,4 +1,4 @@
-(function() {
+(function () {
 	/**
 	 * Корректировка округления десятичных дробей.
 	 *
@@ -28,19 +28,19 @@
 
 	// Десятичное округление к ближайшему
 	if (!Math.round10) {
-		Math.round10 = function(value, exp) {
+		Math.round10 = function (value, exp) {
 			return decimalAdjust('round', value, exp);
 		};
 	}
 	// Десятичное округление вниз
 	if (!Math.floor10) {
-		Math.floor10 = function(value, exp) {
+		Math.floor10 = function (value, exp) {
 			return decimalAdjust('floor', value, exp);
 		};
 	}
 	// Десятичное округление вверх
 	if (!Math.ceil10) {
-		Math.ceil10 = function(value, exp) {
+		Math.ceil10 = function (value, exp) {
 			return decimalAdjust('ceil', value, exp);
 		};
 	}
@@ -64,48 +64,48 @@ var categoryId = 10000,
 	countCategory = 1,
 	countAudio = 1;
 
-createList({ path: PATH + '/music' });
+createList({path: PATH + '/music'});
 
 function createList(folder) {
 	console.log('START');
 
 	readDir(folder)
-		.then(function() {
+		.then(function () {
 			console.time('Parsing_audio_data');
 			console.log('****************  STEP 1: READ DIRECTORIES  ****************');
 
 			return Promise.all(LIST.categories.map(readDir));
 		})
-		.then(function() {
+		.then(function () {
 			return Promise.all(LIST.categories.map(readDir));
 		})
-		.then(function() {
+		.then(function () {
 			return Promise.all(LIST.categories.map(readDir));
 		})
-		.then(function() {
+		.then(function () {
 			return Promise.all(LIST.categories.map(readDir));
 		})
-		.then(function() {
+		.then(function () {
 			return Promise.all(LIST.categories.map(readDir));
 		})
-		.then(function() {
+		.then(function () {
 			console.log('****************  STEP 2: READ AUDIO DATA  ****************');
 
-			return Promise.all(LIST.audio.map(async function(audio) {
-			    var data = await getAudioData(audio);
-			    audio.image = await writeImgAudio(data.audio, data.metadata);
+			return Promise.all(LIST.audio.map(async function (audio) {
+				var data = await getAudioData(audio);
+				audio.image = await writeImgAudio(data.audio, data.metadata);
 
 				// console.log('Read and write audio data ' + audio.title + ' end\r\n');
 			}));
 		})
-		.then(function() {
+		.then(function () {
 			console.log('****************  STEP 3: IMAGE CATEGORY  ****************');
 
-			return Promise.all(LIST.categories.map(async function(category) {
+			return Promise.all(LIST.categories.map(async function (category) {
 				await writeImgCategory(category);
 			}));
 		})
-		.then(function() {
+		.then(function () {
 			createDirectory(PATH + '/data');
 			renderChildsItem();
 
@@ -113,18 +113,19 @@ function createList(folder) {
 		})
 		.catch(handlerError);
 }
+
 function getAudioData(audio) {
-	return new Promise(function(resolve, reject) {
+	return new Promise(function (resolve, reject) {
 		var path = audio.path;
 
 		// console.log('Start reading audio metadata: ' + audio.title);
 		// console.log('Total audio: ' + LIST.audio.length);
 		// console.log('Image audio in progress: ' + countAudio++);
 
-		mm(fs.createReadStream(localPath + path), {duration: true}, function(err, metadata) {
+		mm(fs.createReadStream(localPath + path), {duration: true}, function (err, metadata) {
 			if (err) {
 				console.log(err);
-				resolve({audio: {}, metadata:{picture: ''}});
+				resolve({audio: {}, metadata: {picture: ''}});
 				return;
 			}
 
@@ -139,8 +140,7 @@ function getAudioData(audio) {
 			for (var i = 0; i < metadata.artist.length; i++) {
 				if (audio.artist === '') {
 					audio.artist = metadata.artist[i];
-				}
-				else {
+				} else {
 					audio.artist += ', ' + metadata.artist[i];
 				}
 			}
@@ -166,11 +166,12 @@ function getAudioData(audio) {
 
 		return arr;
 	}
+
 	function getDuration(sec) {
 		sec = Math.floor(sec);
 
-		var minute = Math.floor(sec/60);
-		var second = (sec%60).toString();
+		var minute = Math.floor(sec / 60);
+		var second = (sec % 60).toString();
 
 		if (second.length > 2) second = second.substring(0, 2);
 		if (second.length < 2) second = "0" + second;
@@ -178,8 +179,9 @@ function getAudioData(audio) {
 		return minute + ':' + second;
 	}
 }
+
 function writeImgAudio(audio, data) {
-	return new Promise(function(resolve, reject) {
+	return new Promise(function (resolve, reject) {
 		// console.log('Start writing audio image: ' + audio.title);
 
 		if (data.picture.length === 0) {
@@ -205,11 +207,12 @@ function writeImgAudio(audio, data) {
 		});
 	});
 }
+
 function writeImgCategory(category) {
-	return new Promise(function(resolve, reject) {
+	return new Promise(function (resolve, reject) {
 		var src;
 
-		fs.readdir(localPath + category.path, function(err, result) {
+		fs.readdir(localPath + category.path, function (err, result) {
 			if (err) {
 				reject(err);
 				return;
@@ -228,8 +231,7 @@ function writeImgCategory(category) {
 			if (!src) {
 				category.image = 'i/mod_default.png';
 				resolve();
-			}
-			else {
+			} else {
 				createDirectory(PATH + '/image');
 
 				fs.readFile(localPath + category.path + '/' + src, function (err, data) {
@@ -258,6 +260,7 @@ function writeImgCategory(category) {
 		})
 	})
 }
+
 function writeFile(path, data) {
 
 	fs.writeFile(localPath + path, data, function (err) {
@@ -270,13 +273,14 @@ function writeFile(path, data) {
 
 	});
 }
+
 function readDir(object) {
-	return new Promise(function(resolve, reject) {
+	return new Promise(function (resolve, reject) {
 		var variableList = [];
 		var path = object.path;
 
 		console.log('Reading directory start: ' + path);
-		fs.readdir(localPath + path, function(err, result) {
+		fs.readdir(localPath + path, function (err, result) {
 			if (err) {
 				reject(err);
 				return;
@@ -290,8 +294,7 @@ function readDir(object) {
 
 					result.splice(i, 1);
 					i--
-				}
-				else {
+				} else {
 					obj.title = result[i];
 					obj.path = path + '/' + result[i];
 
@@ -300,7 +303,7 @@ function readDir(object) {
 			}
 
 			Promise.all(variableList.map(getStats))
-				.then(function() {
+				.then(function () {
 					console.log('Reading directory end: ' + path);
 					resolve();
 				});
@@ -308,11 +311,12 @@ function readDir(object) {
 		})
 	})
 }
+
 function getStats(item) {
-	return new Promise(function(resolve, reject) {
+	return new Promise(function (resolve, reject) {
 		var path = localPath + item.path;
 
-		fs.stat(path, function(err, stats) {
+		fs.stat(path, function (err, stats) {
 			if (err) {
 				reject(err);
 				return;
@@ -322,8 +326,7 @@ function getStats(item) {
 				if (!hasItem(item, LIST.audio)) {
 					LIST.audio.push(item);
 				}
-			}
-			else if (stats.isDirectory()) {
+			} else if (stats.isDirectory()) {
 				if (!hasItem(item, LIST.categories)) {
 					LIST.categories.push(item);
 				}
@@ -345,14 +348,17 @@ function hasItem(item, list) {
 
 	return has;
 }
+
 function handlerError(err) {
 	console.log(err);
 }
+
 function createDirectory(path) {
 	if (!fs.existsSync(localPath + path)) {
 		fs.mkdirSync(localPath + path);
 	}
 }
+
 function renderChildsItem() {
 	for (var i = 0; i < LIST.categories.length; i++) {
 		getCategory(LIST.categories[i]);
@@ -381,13 +387,13 @@ function renderChildsItem() {
 
 		if (childs.items.length) {
 			category.childs = childs;
-		}
-		else {
+		} else {
 			getAudio(category);
 		}
 
 		if (!category.parent) category.parent = null;
 	}
+
 	function getAudio(category) {
 		var childs = {};
 		childs.type = 'audio';
