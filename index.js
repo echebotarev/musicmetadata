@@ -53,18 +53,18 @@ var LIST = {};
 LIST.categories = [];
 LIST.audio = [];
 
-var localPath = __dirname + '/../';
-var PATH = null;
-if (process.argv[2]) {
-	PATH = process.argv[2];
-}
-else PATH = 'mod';
+var localPath = process.argv[2] ? process.argv[2] : __dirname + '/../';
+var PATH = 'mod';
+
+console.log('PATH', PATH);
+console.log('ARG', process.argv[2]);
+console.log('TYPEOF ARG', typeof process.argv[2]);
 
 var categoryId = 10000,
 	countCategory = 1,
 	countAudio = 1;
 
-createList({path: PATH.includes('/') ? PATH : PATH + '/music'});
+createList({ path: PATH + '/music' });
 
 function createList(folder) {
 	console.log('START');
